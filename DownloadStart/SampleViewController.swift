@@ -22,18 +22,41 @@ class SampleViewController: UIViewController {
     @IBOutlet weak var imageView3Indicator: UIActivityIndicatorView!
     override func viewDidLoad() {
         super.viewDidLoad()
+        showLoading()
         downloadImage()
         self.view.backgroundColor = .red
     }
 
     func downloadImage() {
-        let image1Data = try? Data.init(contentsOf: self.imageURL1)
-        self.imageView1.image = UIImage.init(data: image1Data!)
         
-        let image2Data = try? Data.init(contentsOf: self.imageURL2)
-        self.imageView2.image = UIImage.init(data: image2Data!)
+        DispatchQueue.global().async {
+            let image1Data = try? Data.init(contentsOf: self.imageURL1)
+            DispatchQueue.main.async {
+                self.imageView1Indication.stopAnimating()
+                self.imageView1.image = UIImage.init(data: image1Data!)
+            }
+        }
         
-        let image3Data = try? Data.init(contentsOf: self.imageURL3)
-        self.imageView3.image = UIImage.init(data: image3Data!)
+        DispatchQueue.global().async {
+            let image2Data = try? Data.init(contentsOf: self.imageURL2)
+            DispatchQueue.main.async {
+                self.imageView2Indicator.stopAnimating()
+                self.imageView2.image = UIImage.init(data: image2Data!)
+            }
+        }
+        
+        DispatchQueue.global().async {
+            let image3Data = try? Data.init(contentsOf: self.imageURL3)
+            DispatchQueue.main.async {
+                self.imageView3Indicator.stopAnimating()
+                self.imageView3.image = UIImage.init(data: image3Data!)
+            }
+        }
+    }
+
+    func showLoading() {
+        imageView1Indication.startAnimating()
+        imageView2Indicator.startAnimating()
+        imageView3Indicator.startAnimating()
     }
 }
